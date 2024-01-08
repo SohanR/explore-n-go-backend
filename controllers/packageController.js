@@ -3,8 +3,8 @@ const Package = require('../models/packageModel');
 // Create a new package
 exports.createPackage = async (req, res) => {
   try {
-    const { hotelId, taxiId, photographerId, price } = req.body;
-    const newPackage = await Package.create({ hotel: hotelId, taxi: taxiId, photographer: photographerId, price });
+    const { hotel, taxi, photographer, price } = req.body;
+    const newPackage = await Package.create({ hotel, taxi, photographer, price });
     res.status(201).json(newPackage);
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -16,11 +16,11 @@ const orderSchema = new mongoose.Schema({
   },
   startDate: {
     type: Date,
-    required: true
+    
   },
   endDate: {
     type: Date,
-    required: true
+   
   },
   totalPrice: {
     type: Number,

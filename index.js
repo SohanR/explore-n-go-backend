@@ -9,7 +9,12 @@ const cookieparser = require('cookie-parser');
 const userRoute = require('./routes/user');
 const hotelRoute = require('./routes/hotel');
 const roomRoute = require('./routes/room');
-const blogRoute = require('./routes/blog');
+const taxiRoute = require('./routes/taxi');
+const photographerRoute = require('./routes/photographer');
+const packageRoute = require('./routes/package');
+const orderRoute = require('./routes/order');
+
+
 
 const app = express();
 
@@ -44,7 +49,12 @@ mongoose
 app.use('/api', userRoute);
 app.use('/api', hotelRoute);
 app.use('/api', roomRoute);
-app.use('/api', blogRoute);
+app.use('/api', taxiRoute)
+app.use('/api', photographerRoute);
+app.use('/api', packageRoute);
+app.use('/api', orderRoute)
+
+
 
 // home route
 app.use((req, res) => {
@@ -66,7 +76,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8800;
 // const host = process.env.HOST || '0.0.0.0';
 
 // application running port

@@ -20,20 +20,8 @@ const userSchema = new mongoose.Schema(
         },
         country: {
             type: String,
-        },
-        image: {
-            type: String,
-        },
-        phone: {
-            type: String,
-        },
-        fblink: {
-            type: String,
-        },
-        twlink: {
-            type: String,
-        },
-        isadmin: {
+        },        
+        isAdmin: {
             type: Boolean,
             default: false,
         },

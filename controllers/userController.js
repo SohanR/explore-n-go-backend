@@ -44,21 +44,18 @@ const signup = async (req, res) => {
  * response with the token and user details.
  */
 const login = async (req, res) => {
+
+    console.log(req.body);
     try {
         const isUser = await UserModel.find({ email: req.body.email });
+        console.log("isUser", isUser);
         if (isUser) {
             const comparePassword = await bcrypt.compare(req.body.password, isUser[0].password);
             if (comparePassword) {
-                // jwt process
-
-                /* The line `const { password, isadmin, ...userDetail } = isUser[0]._doc;` is using
-                object destructuring to extract the `password` and `isadmin` properties from the
-                `isUser[0]._doc` object. It also creates a new object called `userDetail` that
-                contains all the remaining properties of `isUser[0]._doc` except for `password` and
-                `isadmin`. */
-                const { password, isadmin, ...userDetail } = isUser[0]._doc;
+                             
+                const { password, isAdmin, ...userDetail } = isUser[0]._doc;
                 const jwtToken = jwt.sign(
-                    { id: isUser._id, isadmin: isUser.isadmin, email: isUser.email },
+                    { id: isUser._id, isAdmin: isUser.isAdmin, email: isUser.email },
                     process.env.JWT_SECRET_KEY,
                     {
                         expiresIn: '3d',
@@ -67,7 +64,7 @@ const login = async (req, res) => {
                 res.cookie('access_token', jwtToken, {
                     httpOnly: true,
                 }).status(200).json({
-                    message: { details: { ...userDetail }, isadmin },
+                    message: { details: { ...userDetail }, isAdmin },
                     jwtToken,
                 });
             } else {
@@ -84,6 +81,7 @@ const login = async (req, res) => {
         res.status(500).json({
             error: 'Authentication failed!!',
         });
+        console.log(error);
     }
 };
 

@@ -19,7 +19,13 @@ const packageSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true
-  },
+  }, 
+   images: {
+    type: Array,
+},
+packageName:{
+  type:String
+}
   // Add other relevant attributes as needed
   // For example, package name, description, duration, etc.
 }, { timestamps: true });

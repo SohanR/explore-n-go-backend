@@ -1,4 +1,9 @@
 const Order = require('../models/OrderModel');
+const { getOneHotel } = require('./hotelController');
+const {getPackageById} = require('./packageController')
+const {getTaxiById} = require('./taxiController')
+const {getPhotographerById} = require('./photographerController')
+
 
 // Create a new order
 exports.createOrder = async (req, res) => {
@@ -48,7 +53,7 @@ exports.getAllOrders = async (req, res) => {
 
   // Update payment status from due to paid
 exports.updatePaymentStatus = async (req, res) => {
-    const orderId = req.body.orderId;
+    const orderId = req.body.id;
     try {
       const updatedOrder = await Order.findByIdAndUpdate(orderId, { payment: 'paid' }, { new: true });
       if (!updatedOrder) {
@@ -63,7 +68,8 @@ exports.updatePaymentStatus = async (req, res) => {
 
   // Update order status from pending to approved
 exports.updateOrderStatus = async (req, res) => {
-    const orderId = req.body.orderId;
+    const orderId = req.body.id;
+    console.log('order id', orderId);
     try {
       const updatedOrder = await Order.findByIdAndUpdate(orderId, { orderStatus: 'approved' }, { new: true });
       if (!updatedOrder) {
@@ -89,4 +95,55 @@ exports.getOrdersByUserId = async (req, res) => {
     }
   };
   
-  
+  // Delete order by ID
+exports.deleteOrderById = async (req, res) => {
+  const orderId = req.params.orderId;
+  try {
+    const deletedOrder = await Order.findByIdAndDelete(orderId);
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.status(200).json({ message: 'Order deleted successfully', order: deletedOrder });
+  } catch (error) {
+    console.error('Error deleting order:', error.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+// Get order details by ID
+exports.getOrderDetailsById = async (req, res) => {
+  const orderId = req.params.orderId;
+
+  try {
+    const orderDetails = await Order.findById(orderId);
+
+    if (!orderDetails) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    let populatedOrderDetails;
+
+    switch (orderDetails.serviceType) {
+      case 'Package':
+        populatedOrderDetails = await getPackageById({ req:{params: { id: orderDetails.serviceId }} }, res);
+        break;
+      case 'Hotel':
+        populatedOrderDetails = await getOneHotel({ params: { id: orderDetails.serviceId } }, res);
+        break;
+      case 'Taxi':
+        populatedOrderDetails = await getTaxiById({ params: { id: orderDetails.serviceId } }, res);
+        break;
+      case 'Photographer':
+        populatedOrderDetails = await getPhotographerById({ params: { id: orderDetails.serviceId } }, res);
+        break;
+      default:
+        return res.status(400).json({ error: 'Invalid serviceType' });
+    }
+
+    res.status(200).json({ order: populatedOrderDetails });
+  } catch (error) {
+    console.error('Error fetching order details:', error.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

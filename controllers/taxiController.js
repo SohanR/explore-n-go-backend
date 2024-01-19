@@ -3,8 +3,8 @@ const TaxiModel = require('./../models/taxiModel');
 // Create a new taxi
 exports.createTaxi = async (req, res) => {
   try {
-    const { carName, maxCapacity, pricePerKm } = req.body;
-    const newTaxi = await TaxiModel.create({ carName, maxCapacity, pricePerKm });
+    const { carName, maxCapacity, pricePerKm,images,carType } = req.body;
+    const newTaxi = await TaxiModel.create({ carName, maxCapacity, pricePerKm,images,carType});
     res.status(201).json(newTaxi);
   } catch (err) {
     res.status(500).json({ message: err.message });

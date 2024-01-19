@@ -13,6 +13,9 @@ const photographerSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  images: {
+    type: Array,
+},
   // You can add other relevant attributes based on your requirements
   // For example, specialization, availability, portfolio link, etc.
 }, { timestamps: true });

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createOrder, getAllOrders, updatePaymentStatus, updateOrderStatus, getOrdersByUserId } = require('../controllers/orderController');
+const { createOrder, getAllOrders, updatePaymentStatus, updateOrderStatus, getOrdersByUserId, getOrderDetailsById, deleteOrderById } = require('../controllers/orderController');
 
 const router = express.Router();
 
@@ -14,5 +14,7 @@ router.put('/order/update-order', updateOrderStatus);
 router.get('/orders', getAllOrders);
 
 router.get('/order/:userId', getOrdersByUserId);
+router.get('/order/details/:orderId', getOrderDetailsById );
+router.delete('/order/:orderId', deleteOrderById );
 
 module.exports = router;

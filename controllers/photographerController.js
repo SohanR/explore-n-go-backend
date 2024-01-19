@@ -3,8 +3,8 @@ const PhotographerModel = require('../models/photographerModel');
 // Create a new photographer
 exports.createPhotographer = async (req, res) => {
   try {
-    const { name, cameraModel, priceHourly } = req.body;
-    const newPhotographer = await PhotographerModel.create({ name, cameraModel, priceHourly });
+    const { name, cameraModel, priceHourly,images } = req.body;
+    const newPhotographer = await PhotographerModel.create({ name, cameraModel, priceHourly ,images});
     res.status(201).json(newPhotographer);
   } catch (err) {
     res.status(500).json({ message: err.message });

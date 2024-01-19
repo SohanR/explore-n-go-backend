@@ -160,6 +160,33 @@ const getHotelRooms = async (req, res) => {
     }
 };
 
+
+const searchHotels = async (req, res) => {
+    try {
+      const { destination, hotelName, min, max, rating } = req.body;
+  
+      // Constructing the search query with non-empty values
+      const searchQuery = {};
+      if (destination) searchQuery.city = destination;
+      if (hotelName) searchQuery.name = { $regex: new RegExp(hotelName, 'i') };
+      if (min) searchQuery.price = { $gte: min };
+      if (max) searchQuery.price = { ...searchQuery.price, $lte: max };
+      if (rating) searchQuery.rating = rating;
+  
+      const hotels = await HotelModel.find(searchQuery);
+  
+      res.status(200).json({
+        message: hotels,
+      });
+    } catch (error) {
+      console.error('Error searching hotels:', error.message);
+      res.status(500).json({
+        error: 'Server error',
+      });
+    }
+  };
+
+
 module.exports = {
     createHotel,
     updateHotel,
@@ -169,4 +196,5 @@ module.exports = {
     getHotelByCity,
     getHotelByType,
     getHotelRooms,
+    searchHotels
 };

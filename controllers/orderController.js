@@ -3,6 +3,9 @@ const { getOneHotel } = require('./hotelController');
 const {getPackageById} = require('./packageController')
 const {getTaxiById} = require('./taxiController')
 const {getPhotographerById} = require('./photographerController')
+const earningController = require('./earningController');
+const EarningModel = require('../models/earningModel');
+
 
 
 // Create a new order
@@ -54,12 +57,31 @@ exports.getAllOrders = async (req, res) => {
   // Update payment status from due to paid
 exports.updatePaymentStatus = async (req, res) => {
     const orderId = req.body.id;
+    const price = req.body.price;
     try {
       const updatedOrder = await Order.findByIdAndUpdate(orderId, { payment: 'paid' }, { new: true });
       if (!updatedOrder) {
         return res.status(404).json({ error: 'Order not found' });
       }
-      res.status(200).json({ message: 'Payment status updated to paid', order: updatedOrder });
+
+      const currentBalance = await EarningModel.findOne();
+
+      if (!currentBalance) {
+        return res.status(404).json({ error: 'Earning data not found' });
+      }
+
+      console.log("price", price);
+      console.log("current balance",currentBalance.balance);
+
+          // Calculate the new balance
+    const newBalance = currentBalance.balance + price;
+
+    // Update the balance in the earning model
+    await EarningModel.updateOne({}, { balance: newBalance });
+
+
+     res.status(200).json({ message: 'Payment status updated to paid', order: updatedOrder });
+     
     } catch (error) {
       console.error('Error updating payment status:', error.message);
       res.status(500).json({ error: 'Server error' });

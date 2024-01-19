@@ -13,6 +13,7 @@ const taxiRoute = require('./routes/taxi');
 const photographerRoute = require('./routes/photographer');
 const packageRoute = require('./routes/package');
 const orderRoute = require('./routes/order');
+const earningsRoute = require('./routes/earning')
 
 
 
@@ -53,6 +54,7 @@ app.use('/api', taxiRoute)
 app.use('/api', photographerRoute);
 app.use('/api', packageRoute);
 app.use('/api', orderRoute)
+app.use('/api',earningsRoute)
 
 
 
